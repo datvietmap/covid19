@@ -1,0 +1,131 @@
+﻿@model Covid19App.Models.PatientPostModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var today = DateTime.Now;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8"><h3 style="text-align:center">Thêm mới</h3></div>
+        <hr />
+    </div>
+    <form asp-action="Create">
+        <div class="row">
+            <div class="col-md-8 form-group">
+                <label asp-for="Name" class="control-label">Tên</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 form-group">
+                <label asp-for="Address" class="control-label">Địa chỉ</label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label asp-for="Level" class="control-label">Cấp độ</label>
+                <select id="level" asp-for="Level" class="form-control" onchange="showParentPatients()">
+                    @foreach (var item in (Dictionary<int, string>)ViewBag.Levels)
+                    {
+                        <option value=@item.Key>@item.Value</option>
+                    }
+                </select>
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 form-group">
+                <label class="control-label">Nguồn tiếp xúc</label>
+                <select id="parents" asp-for="ParentId" class="selectpicker form-control" data-live-search="true">
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label asp-for="Status" class="control-label">Tình trạng</label>
+                <select asp-for="Status" class="form-control">
+                    <option></option>
+                    @foreach (var item in (Dictionary<int, string>)ViewBag.Status)
+                    {
+                        <option value=@item.Key>@item.Value</option>
+                    }
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 form-group">
+                <label asp-for="VerifyDate" class="control-label">Ngày xác nhận</label>
+                <input asp-for="VerifyDate" type="date" class="form-control" value="@today.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="VerifyDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 form-group">
+                <label asp-for="Note" class="control-label">Ghi chú</label>
+                <textarea class="form-control" asp-for="Note" rows="3"></textarea>
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label asp-for="Lng" class="control-label">Kinh độ</label>
+                <input asp-for="Lng" class="form-control" />
+                <span asp-validation-for="Lng" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 form-group">
+                <label asp-for="Lat" class="control-label">Vĩ độ</label>
+                <input asp-for="Lat" class="form-control" />
+                <span asp-validation-for="Lat" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 form-group">
+                <input style="width:100%" type="submit" value="Tạo mới" class="btn btn-primary" />
+            </div>
+        </div>
+        @if (TempData.ContainsKey("Notifi"))
+        {
+            <h5 id="noti">@TempData["Notifi"]</h5>
+        }
+    </form>
+
+    <div>
+        <a asp-action="Index">Quay lại danh sách</a>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+    });
+
+    function showParentPatients() {
+        var level = $('#level').val();
+
+        $.ajax({
+            url: '@Url.Content("~/Patient/GetListParents")',
+            type: 'get',
+            data: { level: level },
+            success: function (data) {
+                var html = '';
+                html += '<option></option>';
+                for (var i = 0; i < data.length; i++) {
+                    var user = data[i];
+                    html += '<option value=' + user.id + '>' + user.name + '</option>';
+                }
+                $('#parents').html(html);
+            },
+            error: function () {
+                alert('error');
+            }
+        })
+    }
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

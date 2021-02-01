@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Covid19App.Models.PatientAdminViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -60px;
+    }
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    }
+    i {
+        font-size: 20px !important;
+    }
+</style>
+
+
+<h1 style="text-align: center">Danh sách người dân liên quan đến Ncovid-19</h1>
+
+<p>
+    <a asp-action="Create" style="background-color: #b3e0ff; margin-bottom: 1em;" class="btn btn-outline-primary">
+        <i class="fa fa-plus"></i>Thêm mới
+    </a>
+</p>
+<table class="table table-bordered table-hover" id="data">
+    <thead class="head">
+        <tr>
+            <th>
+                Tên
+            </th>
+            <th>
+                Địa chỉ
+            </th>
+            <th>
+                Cấp độ
+            </th>
+            <th>
+                Nguồn tiếp xúc
+            </th>
+            <th>
+                Tình trạng
+            </th>
+            <th>
+                Kinh độ
+            </th>
+            <th>
+                Vĩ độ
+            </th>
+            <th>
+                Ngày xác nhận
+            </th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Parent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lng)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VerifyDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" title="Chỉnh sửa">
+                        <i class="fa fa-edit" style="font-size:20px;"></i>
+                    </a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" title="Người tiếp xúc">
+                    <i class="fa fa-info-circle"></i>
+                    </a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" title="Xóa">
+                        <i class="fa fa-trash-o" style="color:orangered;font-size:20px"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $('#data').DataTable({
+        dom: 'Bfrtip',
+        "bDestroy": true,
+    });
+
+    $(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();   
+});
+
+</script>

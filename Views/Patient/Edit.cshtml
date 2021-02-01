@@ -1,0 +1,108 @@
+﻿@model Covid19App.Models.PatientAdminViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <form asp-action="Edit">
+        <div class="row">
+            <div class="col-md-8"><h3 style="text-align:center">Cập nhật thông tin</h3></div>
+            <hr />
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="row">
+            <div class="col-md-8 form-group">
+                <label asp-for="Name" class="control-label">Tên</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 form-group">
+                <label asp-for="Address" class="control-label">Địa chỉ</label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label class="control-label">Cấp độ</label>
+                <select asp-for="Level" class="form-control" onchange="">
+                    @foreach (var item in (Dictionary<int, string>)ViewBag.Levels)
+                    {
+                        @if (item.Key == (int)Model.Level)
+                        {
+                            <option selected value="@item.Key">@item.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Key">@item.Value</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-4 form-group">
+                <label asp-for="Parent" class="control-label">Nguồn tiếp xúc</label>
+                <input asp-for="Parent" class="form-control" />
+                <span asp-validation-for="Parent" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label asp-for="Status" class="control-label">Tình trạng</label>
+                <select asp-for="Status" class="form-control">
+                    @foreach (var item in (Dictionary<int, string>)ViewBag.Status)
+                    {
+                        if (item.Value == Model.Status)
+                        {
+                            <option selected value=@item.Key>@item.Value</option>
+                        }
+                        else
+                        {
+                            <option value=@item.Key>@item.Value</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 form-group">
+                <label asp-for="VerifyDate" class="control-label">Ngày xác nhận</label>
+                <input asp-for="VerifyDate" type="date" class="form-control" />
+                <span asp-validation-for="VerifyDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 form-group">
+                <label asp-for="Note" class="control-label">Ghi chú</label>
+                <textarea class="form-control" asp-for="Note" rows="3"></textarea>
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label asp-for="Lng" class="control-label">Kinh độ</label>
+                <input asp-for="Lng" class="form-control" />
+                <span asp-validation-for="Lng" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 form-group">
+                <label asp-for="Lat" class="control-label">Vĩ độ</label>
+                <input asp-for="Lat" class="form-control" />
+                <span asp-validation-for="Lat" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-8 form-group">
+            <input style="width:100%" type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+    
+    <div>
+        <a asp-action="Index">Quay lại danh sách</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
